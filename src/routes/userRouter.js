@@ -27,9 +27,9 @@ router.get('/favicon.ico', async (req, res) => {
 let refreshTokens = [];
 
 
-/*router.get('/', async (req, res) => {
-    res.status(200).json("funcionaaaaaa");
-});*/
+router.get('/', async (req, res) => {
+    res.status(200).send("<h1>Servidor en funcionamiento<h1/>");
+});
 /*
 router.post('/', async (req, res) => {
 
