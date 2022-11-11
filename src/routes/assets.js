@@ -8,32 +8,14 @@ const verifyRoles = require('../controllers/verifyRoles');
 router.get('/ver_equipos', verifyToken, verifyRoles(["admin", "user_type_equipment", "user_read"]), async (req, res) => {
         //desde req podemos traer datos desde verifyToken y validar permisos
         try{
-            const limit = Number(req.query.limit) || 10; //recibimos cuantos veremos
-            const skip = Number(req.query.skip) || 0; //recibimos desde donde
-            const search = req.query.search; //recibimos busqueda
-            const sortById = req.query.sortByid;
-            const sortByDesc = req.query.sortByDesc;
             const isAsset = req.query.isAsset || 0; // 1 = true, 0 = false
-           
-            let sortingOrder = {}; //arreglo para ordenar sort
-            const ord = sortByDesc ? 1 : -1; //true asc / false desc
-            let total = '';
-
             let asset = null;
-            let assets = '';
             let newEquipment_type = {};
-
 
             if(!!req.user_type_equipments){
                 newEquipment_type = {
                     equipment_type: {$in: req.user_type_equipments}
                 }
-            }
-
-            if(sortById){
-                sortingOrder[sortById] = ord; // id con order
-            }else{
-                sortingOrder["_id"] = -1; //default id con desc
             }
 
             if(isAsset == 1){
@@ -46,97 +28,13 @@ router.get('/ver_equipos', verifyToken, verifyRoles(["admin", "user_type_equipme
                 };
             }
 
-            //preguntamos si existe search
-            if(search){
-                //obtenemos datos con busqueda en tag
-                //constante para buscar globalmente en todos los campos bd
-                    const findGlobal = [
-                        {tag: { $regex: search}}, 
-                        {make: {$regex: search}},
-                        {model: {$regex: search}},
-                        {serial_number: {$regex: search}},
-                        {asset_code: {$regex: search}},
-                        {asset_type: {$regex: search}},
-                        //{equipment_type: {$regex: search}}, <- GENERA PROBLEMA CON POPULATE
-                        {status: {$regex: search}},
-                        {invoice: {$regex: search}},
-                        //{supplier: {$regex: search}},
-                        //{asset_company: {$regex: search}},
-                        //{location: {$regex: search}},
-                        //{datePurchase: {$regex: search}}
-                    ];
-                    
-                    /*const assets = AssetSchema.aggregate([{
-                        $lookup: {
-                            from: "equipment_type",
-                            let: { "equipment_type": '$equipment_type._id'},
-                            //localField: 'equipment_type',
-                            //foreignField: '_id',
-                            //as: 'equipment_type',
-                            pipeline: [
-                                {
-                                    $match:{
-                                        $expr: {
-                                            $and: [
-                                                {$in: ["_id", "$$equipment_type"]},
-                                                {$eq: ["$name", 'Movil']},
-                                            ]
-                                        }
-                                    }
-                                }
-                            ],
-                            as: "newDatas"
-                        }
-                    }]);*/
-                   //                                                                                          collaction tome en cuenta valor en la comparacion
                
-                  assets = await AssetSchema.find({$and: [{$or: [
-                    {tag: { $regex: search}}, 
-                    {make: {$regex: search}},
-                    {model: {$regex: search}},
-                    {serial_number: {$regex: search}},
-                    {asset_code: {$regex: search}},
-                    {asset_type: {$regex: search}},
-                    {status: {$regex: search}},
-                    {invoice: {$regex: search}},
-                    ]},
-                    {newEquipment_type}]
-                    /*[{$or: findGlobal}, asset]*/}).lean()
-                   .populate({path: 'supplier', select: 'name'})
-                   .populate({path: 'equipment_type', select: 'name'})
-                   .populate({path: 'asset_company', select: 'name'})
-                   .populate({path: 'location', select: 'name'})
-                   .sort(sortingOrder).skip(skip).limit(limit).collation({locale: "en_US", numericOrdering: true}); //datos obtenidos
-                   total = await AssetSchema.count({$and: [{$or: findGlobal}, asset]}); //contador 
-                    //assets = await AssetSchema.find({$or: findGlobal}, {"status": {$ne: "Baja"}}).lean().sort(sortingOrder).skip(skip).limit(limit).collation({locale: "en_US", numericOrdering: true}); //datos obtenidos
-                   // assets = await AssetSchema.find({$and: [{$or: findGlobal}, {"status": {$ne: "Baja"}}]}).lean().sort(sortingOrder).skip(skip).limit(limit).collation({locale: "en_US", numericOrdering: true}); //datos obtenidos
-                  
-                }else{
-                //obtenemos datos sin busqueda
-                
-                   assets = await AssetSchema.find({$and: [newEquipment_type, asset]}).lean()
+                  const assets = await AssetSchema.find({$and: [newEquipment_type, asset]}).lean()
                     .populate({path: 'supplier', select: 'name'})
                     .populate({path: 'equipment_type', select: 'name'})
                     .populate({path: 'asset_company', select: 'name'})
-                    .populate({path: 'location', select: 'name'})
-                    .sort(sortingOrder).skip(skip).limit(limit).collation({locale: "en_US", numericOrdering: true});
-                    
-                    total = await AssetSchema.count({$and: [newEquipment_type, asset]}); //contador
-                    
-                }
-
-            
-            
-            //calculo el total de paginas que hay 
-            const paginated = Math.ceil(total / limit);
-            return res.status(200).json({
-                                        data: assets,
-                                        page: {
-                                            limit,
-                                            skip,
-                                            total,
-                                            paginated
-                                        }});
+                    .populate({path: 'location', select: 'name'});
+            return res.status(200).json(assets);
         }
         catch(error){
             console.log(error);

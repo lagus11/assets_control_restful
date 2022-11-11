@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 function verifyToken(req, res, next) {
  
     let token = req.headers?.authorization;
-    let refreshToken = req.cookies.refreshToken; 
+    //let refreshToken = req.cookies.refreshToken; 
     
     try{
       if(!token) throw new SyntaxError("No Bearer");
@@ -11,12 +11,9 @@ function verifyToken(req, res, next) {
      
       //desarrollo en diferentes plataformas
       jwt.verify(token, process.env.secretToken);
-      if(!refreshToken) throw new SyntaxError("Not exist RefreshToken");
+      //if(!refreshToken) throw new SyntaxError("Not exist RefreshToken");
       
 
-      //podemos mandar los permisos o roles
-        //req.usuario = usuario.usuario;
-        //console.log(usuario.usuario);
       next();
     }catch(error){
       console.log(error);

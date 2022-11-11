@@ -12,8 +12,9 @@ if(process.env.NODE_ENV !== 'production'){
     require('dotenv').config();
 }
 
-// Settings
-app.set('port', process.env.PORT || 3000); //Toma el puerto S.O. o Puerto configurado. default 3000.
+if (app.get('env') === 'production') {
+    app.set('trust proxy', 1); // trust first proxy, crucial
+}
 
 // Middlewares
 app.use(morgan('dev')); //ver las peticiones servidor
@@ -48,7 +49,7 @@ app.use('/historial', require('./routes/history_assets'));
 //refrescar el token
 
 //static files
-//app.use(express.static(path.join(__dirname, '..','..','cliente','src', 'public')));
+app.use(express.static(path.join(__dirname, '..','..','cliente','src', 'public')));
 
 // Inicia el servidor
 // servidor escucha puerto 3000, realice accion

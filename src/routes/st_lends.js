@@ -93,7 +93,6 @@ router.get("/detalles_prestamo/:id", verifyToken, verifyRoles(["admin", "user_ty
   }
 });
 
-
 router.get("/ViewPdf/:urlPdf", verifyToken, verifyRoles(["admin", "user_type_equipment", "user_read"]), async (req, res) => {
   try {
     const ruta = path.join(
@@ -141,6 +140,13 @@ router.get("/expireLend/", verifyToken, verifyRoles(["admin", "user_type_equipme
 
     let resultDate = currentDate + day;
 
+    let newEquipment_type = {};
+    if(!!req.user_type_equipments){
+        newEquipment_type = {
+        equipment_type: {$in: req.user_type_equipments}
+      }
+     }
+
     const st_lendsExp = await St_LendSchema.find({
       $and: [
         {
@@ -157,7 +163,7 @@ router.get("/expireLend/", verifyToken, verifyRoles(["admin", "user_type_equipme
     }).populate({
       path: "idAsset",
       select: "tag status",
-      match: { status: { $eq: "PRESTAMO" } },
+      match: { $and: [{status: { $eq: "PRESTAMO" }}, newEquipment_type]},
     });
 
     const st_lend_expireds = await St_LendSchema.find({
@@ -167,7 +173,7 @@ router.get("/expireLend/", verifyToken, verifyRoles(["admin", "user_type_equipme
     }).populate({
       path: "idAsset",
       select: "tag status",
-      match: { status: { $eq: "PRESTAMO" } },
+      match: { $and: [{status: { $eq: "PRESTAMO" }}, newEquipment_type]},
     });
 
     const st_lendsExpNew = st_lendsExp.filter(
