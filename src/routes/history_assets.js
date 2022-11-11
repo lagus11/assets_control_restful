@@ -8,7 +8,7 @@ router.post("/agregar_historial", verifyToken, verifyRoles(["admin", "user_type_
   const { idAsset, EmployeeNumber, fullNameEmployee } = req.body; //obtengo los datos de la pagina
 
   const dateDelivery = new Date();
-
+  
   const history_asset = {
     idAsset: idAsset,
     EmployeeNumber: EmployeeNumber,
@@ -43,7 +43,6 @@ router.post("/agregar_historial", verifyToken, verifyRoles(["admin", "user_type_
 router.get("/ver_historial/:idAsset", verifyToken, verifyRoles(["admin", "user_type_equipment", "user_read"]), async (req, res) => {
   try {
     const find = await History_assetSchema.find({idAsset: req.params.idAsset})
-
     if (!find) throw "NOT FOUND";
     res.status(200).json(find);
   } catch (error) {

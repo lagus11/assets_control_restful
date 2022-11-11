@@ -5,7 +5,7 @@ const generateToken = (user) => {
     try {
         //genero el token con la uid en payload
         const token = jwt.sign({user : user}, process.env.secretToken, {
-            expiresIn: "15m" // 60 * 30 // 60s por 30 = 30 min
+            expiresIn: "10h" // 60 * 30 // 60s por 30 = 30 min
         });
         return token;
     } catch(error){

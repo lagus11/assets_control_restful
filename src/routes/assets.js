@@ -33,7 +33,8 @@ router.get('/ver_equipos', verifyToken, verifyRoles(["admin", "user_type_equipme
                     .populate({path: 'supplier', select: 'name'})
                     .populate({path: 'equipment_type', select: 'name'})
                     .populate({path: 'asset_company', select: 'name'})
-                    .populate({path: 'location', select: 'name'});
+                    .populate({path: 'location', select: 'name'})
+                    .sort({_id: -1});
             return res.status(200).json(assets);
         }
         catch(error){

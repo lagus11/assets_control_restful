@@ -27,9 +27,12 @@ router.get('/favicon.ico', async (req, res) => {
 let refreshTokens = [];
 
 
-router.get('/', async (req, res) => {
+/*router.get('/', async (req, res) => {
     res.status(200).send("<h1>Servidor en funcionamiento<h1/>");
-});
+});*/
+
+
+
 /*
 router.post('/', async (req, res) => {
 
@@ -95,7 +98,8 @@ router.post("/refreshToken", async (req, res) => {
         //const newRefreshToken = generateRefreshToken(user, res); <---- genera nuevo refresh 1h, causa siempre este activa
 
         //refreshTokens.push(newRefreshToken);
-        return res.status(200).json(newAccessToken);
+        //return res.status(200).json(newAccessToken);
+        return res.tatus(200).json();
     }catch(error){
         const TokenVerificationErrors = {
             "invalid signature": "La firma del JWT no es válida",

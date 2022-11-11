@@ -49,7 +49,7 @@ app.use('/historial', require('./routes/history_assets'));
 //refrescar el token
 
 //static files
-//app.use(express.static(path.join(__dirname, '..','..','cliente','src', 'public')));
+app.use(express.static(path.join(__dirname, '..','..','cliente','src', 'public')));
 
 // Inicia el servidor
 // servidor escucha puerto 3000, realice accion
