@@ -12,7 +12,7 @@ if(process.env.NODE_ENV !== 'production'){
     require('dotenv').config();
 }
 
-if (app.get('env') === 'production') {
+if (process.env.NODE_ENV === 'production') {
     app.set('trust proxy', 1); // trust first proxy, crucial
 }
 
