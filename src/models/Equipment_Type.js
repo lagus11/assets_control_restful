@@ -3,7 +3,7 @@ const { Schema } = mongoose; //nos permite hacer esquema de los datos
 
 const Equipment_TypeSchema = new Schema({
     name: { type: String, required: true},
-    description: { type: String, required: true}
+    description: { type: String}
 });
 
 //paso los datos

@@ -53,7 +53,7 @@ router.get('/ver_editar_equipo/:id', verifyToken, verifyRoles(["admin", "user_ty
         res.status(200).json(find);
     }catch(error){
         if(error === "NOT FOUND"){
-            return res.status(404).json({status: 'ERROR EQUIPO NO ENCONTRADO'});
+            return res.status(404).json({status: 'ERROR ACTIVO NO ENCONTRADO'});
         }
         return res.status(500).send({status: 'ERROR ALGO SALIO MAL'}); //guardo el nuevo equipo con la id que obtengo y mando documento actualizado
     }
@@ -72,7 +72,7 @@ router.get('/ver_detalles_equipo/:id', verifyToken, verifyRoles(["admin", "user_
         res.status(200).json(find);
     }catch(error){
         if(error === "NOT FOUND"){
-            return res.status(404).json({status: 'ERROR EQUIPO NO ENCONTRADO'});
+            return res.status(404).json({status: 'ERROR ACTIVO NO ENCONTRADO'});
         }
         console.log(error);
         return res.status(500).send({status: 'ERROR ALGO SALIO MAL'}); //guardo el nuevo equipo con la id que obtengo y mando documento actualizado
@@ -122,13 +122,13 @@ router.post('/agregar_equipo', verifyToken, verifyRoles(["admin", "user_type_equ
      console.log(Asset);
      try{
          await Asset.save();
-         return res.status(200).json({status: 'Equipo Guardado'});
+         return res.status(200).json({status: 'Activo Guardado'});
      }catch(error){
         console.log(error);
         if(error.name === "ValidationError"){ 
-            return res.status(400).json({status: 'ERROR AL REGISTRAR EL EQUIPO'});
+            return res.status(400).json({status: 'ERROR AL REGISTRAR EL ACTIVO'});
         }
-        return res.status(500).send({status: 'ERROR AL AGREGAR EL EQUIPO'});
+        return res.status(500).send({status: 'ERROR AL AGREGAR EL ACTIVO'});
      }
 });
 
@@ -175,13 +175,13 @@ router.put('/editar_equipo/:id', verifyToken, verifyRoles(["admin", "user_type_e
      try{
         const find = await AssetSchema.findByIdAndUpdate(req.params.id, newAsset, {runValidators: true});
         if( !find ) throw "NOT FOUND";
-        return res.status(200).json({status: 'Equipo Actualizado'});
+        return res.status(200).json({status: 'Activo Actualizado'});
      }catch(error){
         if(error === "NOT FOUND"){
-            return res.status(404).json({status: 'ERROR EQUIPO NO ENCONTRADO'});
+            return res.status(404).json({status: 'ERROR ACTIVO NO ENCONTRADO'});
         }
         console.log(error);
-        return res.status(500).send({status: 'ERROR AL ACTUALIZAR EL EQUIPO'}); //guardo el nuevo equipo con la id que obtengo y mando documento actualizado
+        return res.status(500).send({status: 'ERROR AL ACTUALIZAR EL ACTIVO'}); //guardo el nuevo equipo con la id que obtengo y mando documento actualizado
      }
 });
 
@@ -194,7 +194,7 @@ router.put('/cambioState_equipo/:id', verifyToken, verifyRoles(["admin", "user_t
         return res.status(200).json({status: 'Estatus Actualizado'});
     }catch(error){
         if(error === "NOT FOUND"){
-            return res.status(404).json({status: 'ERROR EQUIPO NO ENCONTRADO'});
+            return res.status(404).json({status: 'ERROR ESTATUS NO ENCONTRADO'});
         }
         console.log(error);
         return res.status(500).send({status: 'ERROR AL ACTUALIZAR EL ESTATUS'}); //guardo el nuevo equipo con la id que obtengo y mando documento actualizado
@@ -205,12 +205,12 @@ router.delete('/eliminar_equipo/:id', verifyToken, verifyRoles(["admin", "user_t
     try{
         const find = await AssetSchema.findByIdAndRemove(req.params.id); //encuentra y borra documento
         if( !find ) throw "NOT FOUND";
-        res.status(200).json({status: 'Equipo Eliminado'});
+        res.status(200).json({status: 'Activo Eliminado'});
     }catch(error){
         if(error === "NOT FOUND"){
-            return res.status(404).json({status: 'ERROR EQUIPO NO ENCONTRADO'});
+            return res.status(404).json({status: 'ERROR ACTIVO NO ENCONTRADO'});
         }
-        return res.status(500).send({status: 'ERROR AL ELIMINAR EL EQUIPO'}); //guardo el nuevo equipo con la id que obtengo y mando documento actualizado
+        return res.status(500).send({status: 'ERROR AL ELIMINAR EL ACTIVO'}); //guardo el nuevo equipo con la id que obtengo y mando documento actualizado
     }
 });
 
@@ -254,7 +254,7 @@ router.get('/ver_tipo_equipo/:equipment_type', verifyToken, verifyRoles(["admin"
         res.status(200).json(find);
     }catch(error){
         if(error === "NOT FOUND"){
-            return res.status(404).json({status: 'ERROR EQUIPO NO ENCONTRADO'});
+            return res.status(404).json({status: 'ERROR ACTIVO NO ENCONTRADO'});
         }
         console.log(error);
         return res.status(500).send({status: 'ERROR ALGO SALIO MAL'}); //guardo el nuevo equipo con la id que obtengo y mando documento actualizado
@@ -274,7 +274,7 @@ router.post('/ver_tipos_equipos/', verifyToken, verifyRoles(["admin", "user_type
         res.status(200).json(find);
     }catch(error){
         if(error === "NOT FOUND"){
-            return res.status(404).json({status: 'ERROR EQUIPO NO ENCONTRADO'});
+            return res.status(404).json({status: 'ERROR ACTIVO NO ENCONTRADO'});
         }
         console.log(error);
         return res.status(500).send({status: 'ERROR ALGO SALIO MAL'}); //guardo el nuevo equipo con la id que obtengo y mando documento actualizado
